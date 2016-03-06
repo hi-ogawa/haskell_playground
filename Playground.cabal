@@ -27,7 +27,7 @@ executable main
 
 -- to be required in `test-suite spec`
 library
-  exposed-modules:     Uva.P10065
+  exposed-modules:     Uva.P10065, Uva.P10054
   ghc-options:         -Wall -fno-warn-unused-do-bind
   build-depends:       HUnit >= 1.2.5.2
                      , QuickCheck >= 2.8.1

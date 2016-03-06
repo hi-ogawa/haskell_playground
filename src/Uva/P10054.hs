@@ -1,17 +1,15 @@
 {-# LANGUAGE TupleSections #-}
 
-module UVA10054 where
+module Uva.P10054 where
 
-import Control.Applicative ((<*))
-import Data.Functor ((<$>))
+import Control.Exception (assert)
 
 import Control.Monad.State
-import Control.Monad
 import Control.Arrow
 import Control.Lens
 import System.IO.Unsafe (unsafePerformIO) -- for debug
-import Data.Functor ((<$>))
 
+import Control.Monad.Writer (Writer, execWriter, tell)
 import Text.Parsec
 
 import Data.List (intercalate)
@@ -26,22 +24,28 @@ type Path = S.Seq Color
 -- main -------
 ---------------
 
-main :: IO ()
-main =
-  void $
-    getContents >>= runParserT pMain () ""
+type MockO = Writer String
 
-pMain :: ParsecT String () IO ()
+putStrMock :: String -> MockO ()
+putStrMock = tell
+
+main :: IO ()
+main = putStr . mainPure =<< getContents
+
+mainPure :: String -> String
+mainPure = execWriter . runParserT pMain () ""
+
+pMain :: ParsecT String () MockO ()
 pMain =
   do nCases <- pNum <* newline
      count nCases pGraph >>= (
        zip (fix (\f i -> i : f (i + 1)) 1) >>>
        map (uncurry solve) >>>
        intercalate "\n" >>>
-       liftIO . putStr
+       lift . putStrMock
        )
 
-pGraph :: ParsecT String () IO Graph
+pGraph :: ParsecT String () MockO Graph
 pGraph =
   do nEdges <- pNum <* newline
      edges <- count nEdges (
@@ -53,6 +57,7 @@ pGraph =
      return $ A.accumArray (\dup _ -> dup + 1) 0 graphBnds $
        map (, undefined) $ edges >>= (\(s, e) -> [(s, e), (e, s)])
 
+pNum :: Monad m => Read a => Num a => ParsecT String () m a
 pNum = read <$> many digit
 
 solve :: Int -> Graph -> String
@@ -67,17 +72,22 @@ showPath :: Path -> String
 showPath path =
   case S.viewl path of
     hd S.:< tl -> show hd ++ " " ++ f tl
+    _ -> assert False undefined
   where
-    f path =
-      case S.viewl path of
+    f _path =
+      case S.viewl _path of
        hd S.:< tl -> show hd ++ "\n" ++
                      if S.null tl
                      then ""
                      else show hd ++ " " ++ f tl
+       _ -> assert False undefined
 
 -- global readonly vars
+graphBnds :: ((Color, Color), (Color, Color))
 graphBnds = ((1, 1), (50, 50))
+colorBnds :: (Color, Color)
 colorBnds = (1, 50)
+colors :: [Color]
 colors = A.range colorBnds
 
 ---------------
@@ -156,7 +166,7 @@ connected :: Graph -> Bool
 connected g = eval cmp
   where
     eval :: CompM' a -> a
-    eval cmp = unsafePerformIO $ evalStateT cmp (undefined, undefined, undefined)
+    eval _cmp = unsafePerformIO $ evalStateT _cmp (undefined, undefined, undefined)
     cmp :: CompM' Bool
     cmp =
       do _1 .= g
@@ -185,16 +195,3 @@ traverseGraph c =
        filter (not . (vtd A.!)) >>>
        mapM_ traverseGraph
        )
-
---------------
--- examples --
---------------
-
-g0 = "5\n1 2\n2 3\n3 4\n4 5\n5 6\n"
-g1 = "5\n2 1\n2 2\n3 4\n3 1\n2 4\n"
-
-ex0 = "2\n5\n1 2\n2 3\n3 4\n4 5\n5 6\n5\n2 1\n2 2\n3 4\n3 1\n2 4"
-
-g2 = "1 2\n2 2\n2 1\n"
-
-ex1 = "1\n3\n" ++ g2
