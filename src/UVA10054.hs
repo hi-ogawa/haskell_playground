@@ -2,6 +2,9 @@
 
 module UVA10054 where
 
+import Control.Applicative ((<*))
+import Data.Functor ((<$>))
+
 import Control.Monad.State
 import Control.Monad
 import Control.Arrow
