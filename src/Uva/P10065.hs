@@ -14,14 +14,7 @@ module Uva.P10065 where
 
 import Control.Exception (assert)
 
--- NOTE:
---   - on my local ghc 7.10, (<*) and (<$>) loaded via GHC.Base.
---   - on travis ci ghc 7.8, they are not.
-import Control.Applicative ((<*))
-import Data.Functor ((<$>))
-
-import Control.Monad.Writer
-
+import Control.Monad.Writer (Writer, execWriter, tell, lift)
 import Text.Parsec
 import Numeric (showFFloat)
 
