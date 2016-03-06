@@ -54,4 +54,3 @@ ex4 = do
   input <- readFile "./resources/UVA10065.input"
   output <- readFile "./resources/UVA10065.output"
   mainPure input `shouldBe` output
-
