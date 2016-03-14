@@ -75,7 +75,6 @@ pArray :: Monad m => Stream s m Char => ParsecT s () m BoolArray
 pArray = do
   l <- pNum; space; w <- pNum; newline
   -- trees around boundary doesn't affect area. that's why it's not ((0, 0), (l, w))
-  -- TODO: handle the case where l == 1 or w == 1
   pTrees $ listArray ((1, 1), (l - 1, w - 1)) (repeat True)
 
 -- tail recursion
@@ -104,7 +103,8 @@ pNum = do
 -- algorithms --
 
 solve :: BoolArray -> Int
-solve = smartSolve
+solve bAr | length (indices bAr) > 0 = smartSolve bAr
+           | otherwise   = 1
 
 ---------------
 -- smart one --
