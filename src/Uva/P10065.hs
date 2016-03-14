@@ -1,4 +1,4 @@
-module Uva.P10065 where
+module Uva.P10065 (main, spec) where
 
 -- Lesson:
 --   - haskell tips
@@ -14,11 +14,8 @@ module Uva.P10065 where
 
 import Control.Exception (assert)
 
--- NOTE:
---   - on my local ghc 7.10, (<*) and (<$>) loaded via GHC.Base.
---   - on travis ci ghc 7.8, they are not.
-import Control.Applicative ((<*))
-import Data.Functor ((<$>))
+import Test.Hspec
+import Control.Monad.Identity
 
 import Control.Monad.Writer (Writer, execWriter, tell, lift)
 import Text.Parsec
@@ -65,7 +62,7 @@ pMainRec i =
 
 pCase :: Monad m => ParsecT String () m Double
 pCase =
-  do nPts <- pNum <* newline
+  do nPts <- pNum; newline
      pts <- count nPts $ do
        x <- pNum; space; y <- pNum; newline
        return (x, y)
@@ -73,7 +70,7 @@ pCase =
 
 
 pNum :: Monad m => Read a => Num a => ParsecT String () m a
-pNum = read <$> many digit
+pNum = read `fmap` many digit
 
 
 ---------------
@@ -118,3 +115,50 @@ signedArea pts =
   where
     area :: Point -> Point -> Double
     area (x, y) (x', y') = x * y' - x' * y
+
+
+----------
+-- spec --
+
+spec :: Spec
+spec = do
+  describe "hull" $ it "." ex0
+  describe "solve" $ do
+    it "." ex1
+    it "." ex2
+  describe "pCase" $ it "." ex3
+  describe "mainPure" $ it "." ex4
+  where
+    ex0 = hull i `shouldBe` o
+      where
+        i = [(2, 1), (2, 2), (1, 3), (3, 2), (3, 2.5), (2, 5), (2.5, 3), (4, 5)]
+        o = [(1, 3), (2, 1), (3, 2), (4, 5), (2, 5)]
+
+    ex1 = solve i `shouldBe` o
+      where
+        i = [(2, 2), (2, 0), (0, 0), (0, 2), (1, 3)]
+        o = 0.0
+
+    ex2 = solve i `shouldBe` o
+      where
+        i = [(0, 0), (0, 3), (1, 4), (2, 3), (4, 4), (4, 1), (2, 1)]
+        o = 18.518518518518523
+
+    ex3 =
+      runParserT pCase () "" i `shouldBe` Identity (Right o)
+      where
+        i =
+          "7"   ++ "\n" ++
+          "0 0" ++ "\n" ++
+          "0 3" ++ "\n" ++
+          "1 4" ++ "\n" ++
+          "2 3" ++ "\n" ++
+          "4 4" ++ "\n" ++
+          "4 1" ++ "\n" ++
+          "2 1" ++ "\n"
+        o = 18.518518518518523
+
+    ex4 = do
+      input <- readFile "./resources/UVA10065.input"
+      output <- readFile "./resources/UVA10065.output"
+      mainPure input `shouldBe` output

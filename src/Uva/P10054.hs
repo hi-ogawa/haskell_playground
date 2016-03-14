@@ -1,14 +1,10 @@
 {-# LANGUAGE TupleSections #-}
 
-module Uva.P10054 where
+module Uva.P10054 (main, spec) where
 
 import Control.Exception (assert)
 
--- NOTE:
---   - on my local ghc 7.10, (<*) and (<$>) loaded via GHC.Base.
---   - on travis ci ghc 7.8, they are not.
-import Control.Applicative ((<*))
-import Data.Functor ((<$>))
+import Test.Hspec
 
 import Control.Monad.State
 import Control.Arrow
@@ -43,7 +39,7 @@ mainPure = execWriter . runParserT pMain () ""
 
 pMain :: ParsecT String () MockO ()
 pMain =
-  do nCases <- pNum <* newline
+  do nCases <- pNum; newline
      count nCases pGraph >>= (
        zip (fix (\f i -> i : f (i + 1)) 1) >>>
        map (uncurry solve) >>>
@@ -53,18 +49,18 @@ pMain =
 
 pGraph :: ParsecT String () MockO Graph
 pGraph =
-  do nEdges <- pNum <* newline
+  do nEdges <- pNum; newline
      edges <- count nEdges (
-       do n0 <- pNum <* space
+       do n0 <- pNum; space
           -- don't consume the last newline of whole input
-          n1 <- pNum <* (optional newline)
+          n1 <- pNum; (optional newline)
           return (n0, n1)
        )
      return $ A.accumArray (\dup _ -> dup + 1) 0 graphBnds $
        map (, undefined) $ edges >>= (\(s, e) -> [(s, e), (e, s)])
 
 pNum :: Monad m => Read a => Num a => ParsecT String () m a
-pNum = read <$> many digit
+pNum = read `fmap` many digit
 
 solve :: Int -> Graph -> String
 solve i g =
@@ -201,3 +197,15 @@ traverseGraph c =
        filter (not . (vtd A.!)) >>>
        mapM_ traverseGraph
        )
+
+
+----------
+-- spec --
+
+spec :: Spec
+spec = do
+  describe "mainPure" $ do
+    it "." $ do
+      input <- readFile "./resources/UVA10054.input"
+      output <- readFile "./resources/UVA10054.output"
+      mainPure input `shouldBe` output
