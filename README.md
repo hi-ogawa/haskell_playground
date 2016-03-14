@@ -4,6 +4,10 @@ __Execute program__
 
 
 ```
+# my environment
+$ ghc --version
+The Glorious Glasgow Haskell Compilation System, version 7.10.2
+
 # as binary
 $ cabal build
 $ ./dist/build/main/main 10065 < ./resources/UVA10065.input
@@ -13,6 +17,9 @@ $ runHaskell src/Uva/P10065.hs < ./resources/UVA10065.input
 
 # tips for checking diff using bash syntax: http://askubuntu.com/questions/229447/how-do-i-diff-the-output-of-two-commands
 $ diff <(runHaskell src/Uva/P10065.hs < ./resources/UVA10065.input) <(cat ./resources/UVA10065.output)
+
+# run tests (see .travis.yml)
+$ cabal configure --enable-tests && cabal build && cabal test --show-details=always
 ```
 
 __References__
