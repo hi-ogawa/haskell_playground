@@ -18,8 +18,7 @@ import Control.Exception (assert)
 import Control.Arrow ((>>>), (&&&))
 import Control.Monad (join, zipWithM_, when, void)
 import Control.Monad.State (State, evalState)
-import Control.Lens (makeLenses, (.=), (%=), use, to)
-import Data.Function ((&))
+import Control.Lens (makeLenses, (.=), (%=), use, to, (&))
 
 import Data.Array.Diff
 
