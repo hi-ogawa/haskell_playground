@@ -21,6 +21,8 @@ executable main
                      , lens
                      , mtl >=2.2 && <2.3
                      , parsec
+                     , process >= 1.2.3.0
+                     , random >= 1.1
                      , text >= 1.2.1.3
   hs-source-dirs:      src
   default-language:    Haskell2010
@@ -41,6 +43,8 @@ library
                      , lens
                      , mtl >=2.2 && <2.3
                      , parsec
+                     , process >= 1.2.3.0
+                     , random >= 1.1
                      , text >= 1.2.1.3
   hs-source-dirs:      src
   default-language:    Haskell2010
@@ -61,6 +65,8 @@ test-suite spec
                      , lens
                      , mtl >=2.2 && <2.3
                      , parsec
+                     , process >= 1.2.3.0
+                     , random >= 1.1
                      , text >= 1.2.1.3
   hs-source-dirs:       src
   default-language:     Haskell2010
