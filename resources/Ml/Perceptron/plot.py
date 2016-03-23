@@ -6,8 +6,8 @@ xs = np.linspace(-1, 1, 1000)
 plt.xlim(-1, 1)
 plt.ylim(-1, 1)
 
-c0, c1 = open("points.dat").read().strip().split("\n\n")
-ls = open("lines.dat").read().strip().split("\n")
+c0, c1 = open("resources/Ml/Perceptron/points.dat").read().strip().split("\n\n")
+ls = open("resources/Ml/Perceptron/lines.dat").read().strip().split("\n")
 
 def parse_points(lines):
     ls = lines.strip().split("\n")
@@ -42,4 +42,4 @@ l, = plt.plot([], [])
 plot_ani = animation.FuncAnimation(fig, update_line, len(abcs), fargs=(abcs, l),
                                    interval=100, blit=False)
 
-plot_ani.save("plot.mp4")
+plot_ani.save("resources/Ml/Perceptron/plot.mp4")

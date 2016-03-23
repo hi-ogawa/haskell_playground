@@ -37,9 +37,22 @@ import Control.Monad.Writer
 --      - extend (u, v) to (u, v, 1) to deal with `w2` nicely
 --      - negate the elements in the second class X'
 
+----------
+-- main --
+
+{- usage:
+ $ runHaskell src/Ml/Perceptron.hs
+ $ python3 resources/Ml/Perceptron/plot.py
+-}
+
+main :: IO ()
+main = do
+  writeFile "resources/Ml/Perceptron/points.dat" (formatSamples samples)
+  writeFile "resources/Ml/Perceptron/lines.dat" (formatLines $ uncurry offline samples)
+
+
 type R_2 = (Double, Double)
 type R_3 = (Double, Double, Double)
-
 
 ---------------
 -- algorithm --
@@ -81,15 +94,6 @@ minus (w0, w1, w2) (w0', w1', w2') = (w0 - w0', w1 - w1', w2 - w2')
 
 times :: Double -> R_3 -> R_3
 times c (w0, w1, w2) = (c*w0, c*w1, c*w2)
-
-----------
--- main --
-
-main :: IO ()
-main = do
-  writeFile "resources/Ml/Perceptron/points.dat" (formatSamples samples)
-  writeFile "resources/Ml/Perceptron/lines.dat" (formatLines $ uncurry offline samples)
-
 
 -- linearly separable samples
 
