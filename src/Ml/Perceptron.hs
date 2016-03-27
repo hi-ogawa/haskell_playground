@@ -6,9 +6,10 @@ import Numeric (showFFloat)
 import Control.Monad.Writer
 
 -- TODO:
---   - implement two versions
+--   - implement three versions
 --     - offline
 --     - online
+--     - soft
 --   - convergence theorem of linearly seperable instances and time complexity
 --   - gradient descent terminology:
 --     - learning rate - step size (must be 0..1 ?)
