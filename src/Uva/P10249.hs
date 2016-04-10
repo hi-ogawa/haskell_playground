@@ -7,7 +7,8 @@ import Test.Hspec
 import Data.Array
 import Data.Array.IO -- TODO: try MVector
 import Control.Monad
-import Data.Function
+import Data.Function (fix)
+import BasePrelude ((&))
 import Data.Sequence (viewl, singleton, ViewL(..), (|>))
 
 type CompM a = IO a
