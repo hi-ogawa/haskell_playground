@@ -1,15 +1,14 @@
 {-# LANGUAGE TupleSections #-}
 {-# LANGUAGE ScopedTypeVariables #-}
-module P10249 where
+module Uva.P10249 (spec) where
 
 import Test.Hspec
 
-import Control.Arrow
 import Data.Array
 import Data.Array.IO -- TODO: try MVector
 import Control.Monad
 import Data.Function
-import Data.Sequence (empty, viewl, viewr, singleton, ViewL(..), ViewR(..), (|>))
+import Data.Sequence (viewl, singleton, ViewL(..), (|>))
 
 type CompM a = IO a
 
@@ -20,17 +19,27 @@ type CompM a = IO a
 type Graph = IOArray Int [Int] -- TODO: it can be immutable since it's readonly
 type Capacities = IOArray (Int, Int) Int -- TODO: it can be immutable since it's readonly
 type Flow = IOArray (Int, Int) Int
-type Flow' = Array (Int, Int) Int
 
 
 ---------------
 -- algorithm --
 
-solve :: [Int] -> [Int] -> IO (Maybe [[Int]])
+solve :: [Int] -> [Int] -> CompM (Maybe [[Int]])
 solve teams tables = do
-  arrangements
-  where
-    arrangements = undefined
+  (graph, capacities, s, t, teamVs, tableVs) <- constructGraph teams tables
+  flow <- algoEdmondsKarp s t graph capacities
+  maxFlow <- sum `fmap` mapM (readArray flow . (s,)) teamVs
+  if maxFlow == sum teams
+  then do
+    let n = length teams
+    teamsToTables <- flip mapM teamVs $ \v ->
+        tableVs & (
+          filterM (readArray flow . (v,) >=> (return . (== 1))) >=>
+          mapM (return . \v' -> v' - (n + 1))
+          )
+    return (Just teamsToTables)
+  else return Nothing
+
 
 constructGraph :: [Int] -> [Int] -> CompM (Graph, Capacities, Int, Int, [Int], [Int])
 constructGraph teams tables = do
@@ -127,7 +136,14 @@ modifyArray ar i f = do
 
 spec :: Spec
 spec = do
-  describe "constructGraph" $ it "." $ do
+  describe "solve" $ do
+    it "." $ do
+      Just teamsToTables <- solve [4, 5, 3, 5] [3, 5, 2, 6, 4]
+      teamsToTables `shouldBe` [[1,2,4,5],[1,2,3,4,5],[2,4,5],[1,2,3,4,5]]
+    it "." $ do
+      n <- solve [4, 5, 3, 5] [3, 5, 2, 6, 3]
+      n `shouldBe` Nothing
+  describe "constructGraph, algoEdmondsKarp" $ it "." $ do
     (g, c, s, t, _, _) <- constructGraph [4, 5, 3, 5] [3, 5, 2, 6, 4]
     g' <- freeze g
     c' <- freeze c
