@@ -10,7 +10,7 @@ module Uva.P10043 (main, spec) where
 import Test.Hspec
 
 -- debug
-import Debug.Trace (trace)
+-- import Debug.Trace (trace)
 
 -- non-exhaustive pattern match
 import Control.Exception (assert)
@@ -44,11 +44,11 @@ makeLenses ''St
 -----------
 -- debug --
 
-debug :: Show a => a -> a
-debug x = trace (show x) x
+-- debug :: Show a => a -> a
+-- debug x = trace (show x) x
 
-debugM :: Show a => Monad m => a -> m a
-debugM x = trace (show x) (return x)
+-- debugM :: Show a => Monad m => a -> m a
+-- debugM x = trace (show x) (return x)
 
 
 ----------------
@@ -160,8 +160,8 @@ dumbCalcVertical iAr j =
 
 -- O(n)
 -- TODO: implement smarter version of `smartCalcVertical`
-smarterCalcVertical :: IntArray -> Int -> Int
-smarterCalcVertical iAr j = undefined
+-- smarterCalcVertical :: IntArray -> Int -> Int
+-- smarterCalcVertical iAr j = undefined
 
 -- O(n)
 -- TODO: it makes unnecessary copy of list from one column of array, which might be bottleneck
@@ -279,13 +279,13 @@ spec = do
         "6"       , "\n",
         "80"      , "\n"
       ]
-    i1 = B.fromChunks [
-        "1"                  , "\n",
-        "2467 1797"          , "\n",
-        "1 1655 600"         , "\n",
-        "2 1369 902 -371 -54", "\n",
-        "0"
-      ]
-    o1 = B.fromChunks [
-        "2207965", "\n"
-      ]
+    -- i1 = B.fromChunks [
+    --     "1"                  , "\n",
+    --     "2467 1797"          , "\n",
+    --     "1 1655 600"         , "\n",
+    --     "2 1369 902 -371 -54", "\n",
+    --     "0"
+    --   ]
+    -- o1 = B.fromChunks [
+    --     "2207965", "\n"
+    --   ]
