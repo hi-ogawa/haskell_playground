@@ -8,7 +8,6 @@ branches:
 cache:
   directories:
     - my_cabal_sandbox
-    - cabal.sandbox.config
 
 before_install:
   - sudo apt-get install -y libblas-dev libatlas-dev liblapack-dev
