@@ -4,6 +4,7 @@ ghc: 7.8
 branches:
   only:
     - master
+    - use-cabal-sandbox-on-travis
 
 cache:
   directories:
