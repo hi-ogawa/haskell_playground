@@ -22,6 +22,13 @@ $ diff <(runHaskell src/Uva/P10065.hs < ./resources/UVA10065.input) <(cat ./reso
 $ cabal configure --enable-tests && cabal build && cabal test --show-details=always
 ```
 
+__test in docker__
+
+```
+$ docker build -t hiogawa/haskell_playground_test .
+$ docker run --rm -v $PWD/.cabal-sandbox.docker:/app/.cabal-sandbox hiogawa/haskell_playground_volume_test
+```
+
 __References__
 
 - input output is taken from uDebug: https://www.udebug.com/
