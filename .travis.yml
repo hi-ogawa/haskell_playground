@@ -15,7 +15,7 @@ before_install:
   - sudo apt-get install -y libblas-dev libatlas-dev liblapack-dev
   - ls -al .
   - ls -al my-cabal-sandbox
-  - test -d my-cabal-sandbox/lib || cabal sandbox init
+  - test -d my-cabal-sandbox/packages || (rm cabal.sandbox.config && cabal sandbox init)
   - ls -al .
   - ls -al my-cabal-sandbox
 
