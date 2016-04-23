@@ -12,9 +12,10 @@ cache:
 
 before_install:
   - sudo apt-get install -y libblas-dev libatlas-dev liblapack-dev
+  - cp cabal.sandbox.config.travis cabal.sandbox.config
   - ls -al .
   - ls -al my-cabal-sandbox
-  - test -d my-cabal-sandbox/packages || (cabal sandbox init)
+  - test -d my-cabal-sandbox/packages || cabal sandbox init --sandbox my-cabal-sandbox
   - cat cabal.sandbox.config
   - ls -al .
   - ls -al my-cabal-sandbox
