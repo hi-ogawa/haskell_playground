@@ -1,6 +1,8 @@
 language: haskell
 ghc:
   - 7.8
+env:
+  - COME_ON_CACHE=whatever
 
 branches:
   only:
