@@ -7,12 +7,11 @@ branches:
 
 cache:
   directories:
-    - my_cabal_sandbox
+    - .cabal-sandbox
 
 before_install:
   - sudo apt-get install -y libblas-dev libatlas-dev liblapack-dev
-  - ls -la .
-  - cabal sandbox init --sandbox my_cabal_sandbox
+  - cabal sandbox init
 
 script:
   - cabal configure --enable-tests && cabal build && cabal test --show-details=always
