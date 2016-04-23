@@ -18,6 +18,7 @@ before_install:
   - ls -al .
   - ls -al .cabal-sandbox
 
+
 script:
   - cabal configure --enable-tests && cabal build && cabal test --show-details=always
   - ls -al .
