@@ -8,6 +8,7 @@ import qualified Uva.P10032 as P10032
 import qualified Uva.P10131 as P10131
 import qualified Uva.P10154 as P10154
 import qualified Uva.P10181 as P10181
+import qualified Uva.P10041 as P10041
 
 main :: IO ()
 main = hspec $ do
@@ -19,3 +20,4 @@ main = hspec $ do
   describe "P10131" $ P10131.spec
   describe "P10154" $ P10154.spec
   describe "P10181" $ P10181.spec
+  describe "P10041" $ P10041.spec
