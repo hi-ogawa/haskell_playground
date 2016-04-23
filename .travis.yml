@@ -13,7 +13,7 @@ cache:
 before_install:
   - sudo apt-get install -y libblas-dev libatlas-dev liblapack-dev
   - ls -la .
-  - test -d my_cabal_sandbox || cabal sandbox init --sandbox my_cabal_sandbox
+  - cabal sandbox init --sandbox my_cabal_sandbox
 
 script:
   - cabal configure --enable-tests && cabal build && cabal test --show-details=always
