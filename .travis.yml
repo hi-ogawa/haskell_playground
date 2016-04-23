@@ -1,6 +1,17 @@
 language: haskell
 ghc: 7.8
+
+branches:
+  only:
+    - master
+
+cache:
+  directories:
+    - .cabal-sandbox
+
 before_install:
   - sudo apt-get install -y libblas-dev libatlas-dev liblapack-dev
+  - test -d .cabal-sandbox || cabal sandbox init
+
 script:
   - cabal configure --enable-tests && cabal build && cabal test --show-details=always
