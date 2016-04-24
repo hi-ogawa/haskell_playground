@@ -1,4 +1,3 @@
-# whatever language
 # language is set to ruby by default
 sudo: required
 services:
