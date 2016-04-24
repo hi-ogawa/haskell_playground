@@ -19,7 +19,7 @@ main = do
   putStr =<< mainS =<< getContents
 
 mainS :: String -> IO String
-mainS = pure . format <=< mapM solve . parse
+mainS = return . format <=< mapM solve . parse
 
 parse ::  String -> [[[Color]]]
 parse = either undefined id . runParser parser () ""
@@ -28,7 +28,7 @@ parse = either undefined id . runParser parser () ""
     parser = do
       numCubes <- number
       if numCubes == 0
-        then pure []
+        then return []
         else do
         cubesColors <- count numCubes $ count 6 number
         (cubesColors:) `fmap` parser
@@ -93,26 +93,26 @@ solve cubesColors = do
       (mx, k) <- ($ [0..(j-1)]) $ (
         mapMaybeM $ \k -> do
           myb <- readArray a (i', k)
-          pure $ (\(h, _, _) -> (h, k)) `fmap` myb
+          return $ (\(h, _, _) -> (h, k)) `fmap` myb
         ) >=> (
-        pure . maximumBy (comparing fst)
+        return . maximumBy (comparing fst)
         )
       prev_a_i_j <- readArray a (i, j)
       case prev_a_i_j of
-        Just (h, _, _) | h > mx + 1 -> pure ()
+        Just (h, _, _) | h > mx + 1 -> return ()
         _ -> writeArray a (i, j) (Just (mx + 1, (i', k), f))
 
   -- find answer
   last_ij <- ($ [(i, j) | i <- [cMin..cMax], j <- [1..n]]) $ (
     mapMaybeM $ \(i, j) -> do
        myb <- readArray a (i, j)
-       pure $ (\(h, _, _) -> (h, (i, j))) `fmap` myb
+       return $ (\(h, _, _) -> (h, (i, j))) `fmap` myb
     ) >=> (
-    pure . snd . maximumBy (comparing fst)
+    return . snd . maximumBy (comparing fst)
     )
 
   -- backtracking
-  let backtrack (i, j) | j == 0 = pure []
+  let backtrack (i, j) | j == 0 = return []
                        | otherwise = do
         Just (_, next_ij, f) <- readArray a (i, j)
         ((j, op f):) `fmap` backtrack next_ij
@@ -121,7 +121,7 @@ solve cubesColors = do
 
 
 mapMaybeM :: Monad m => (a -> m (Maybe b)) -> [a] -> m [b]
-mapMaybeM f = mapM f >=> pure . catMaybes
+mapMaybeM f = mapM f >=> return . catMaybes
 
 
 ----------
@@ -129,7 +129,7 @@ mapMaybeM f = mapM f >=> pure . catMaybes
 
 spec :: Spec
 spec = do
-  describe "mainPure" $ do
+  describe "mainReturn" $ do
     it "." $ do
       input <- readFile "./resources/UVA10051.input"
       output <- mainS input
