@@ -1,7 +1,7 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE TupleSections #-}
-module Uva.P10051 (spec) where
+module Uva.P10051 (main, spec) where
 
 import Test.Hspec
 import Control.Monad
