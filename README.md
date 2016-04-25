@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/hi-ogawa/haskell_playground.png?branch=master)](https://travis-ci.org/hi-ogawa/haskell_playground)
 
+[![Build Status](http://ec2-52-193-100-14.ap-northeast-1.compute.amazonaws.com/buildStatus/icon?job=haskell_playground)](http://ec2-52-193-100-14.ap-northeast-1.compute.amazonaws.com/job/haskell_playground/)
+
 __Execute program__
 
 
