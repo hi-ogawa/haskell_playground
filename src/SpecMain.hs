@@ -12,6 +12,7 @@ import qualified Uva.P10041 as P10041
 import qualified Uva.P10051 as P10051
 import qualified Uva.P10003 as P10003
 import qualified Uva.P116 as P116
+import qualified SimpleIteratee as SimpleIteratee
 
 main :: IO ()
 main = hspec $ do
@@ -27,3 +28,4 @@ main = hspec $ do
   describe "P10051" $ P10051.spec
   describe "P10003" $ P10003.spec
   describe "P116"   $ P116.spec
+  describe "SimpleIteratee" $ SimpleIteratee.spec
