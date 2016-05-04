@@ -1,4 +1,4 @@
-module SimpleIteratee (spec) where
+module IterateeWaitable (spec) where
 
 -- Motivation:
 --  - simple implementation of `Iteratee` for learning purpose

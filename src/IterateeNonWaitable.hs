@@ -1,4 +1,4 @@
-module NonWaitableIteratee (spec) where
+module IterateeNonWaitable (spec) where
 
 -- NOTE:
 --  - enumerator composition doesn't work for non waitable iteratee defintion.
