@@ -79,7 +79,7 @@ listFunction2Iteratee f =
 list2Enumerator :: [s] -> Enumerator s a
 list2Enumerator ls = \it ->
   case it of
-    Yield _ -> assert False undefined
+    Yield _ -> it
     Continue f ->
       case ls of
         [] -> f Nothing
@@ -101,15 +101,11 @@ iTake :: Int -> Iteratee a [a]
 iTake 0 = Yield []
 iTake n = Continue $ \(Just s) -> (s:) `fmap` iTake (n - 1)
 
-iDropAll :: Iteratee a ()
-iDropAll = listFunction2Iteratee $ \_ -> ()
-
 iSum_of_0th_and_5th :: Iteratee Int Int
 iSum_of_0th_and_5th = do
   n <- iHead
   iTake 4
   m <- iHead
-  iDropAll
   return (n + m)
 
 eFilter :: (s -> Bool) -> Enumeratee s s a
@@ -148,7 +144,7 @@ prop_eCompose l l' =
 
 prop_eFilter :: Property
 prop_eFilter =
-  let it = join $ eFilter (> 5) (iHead <* iDropAll) in
+  let it = join $ eFilter (> 5) iHead in
   run (list2Enumerator [1..10::Int] it) === 6
 
 spec :: Hs.Spec
