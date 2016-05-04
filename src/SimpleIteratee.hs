@@ -5,8 +5,8 @@ module SimpleIteratee (spec) where
 --  - things to be noted:
 --    - no monad transformation
 --    - no `Exception` constructor
---    - `Nothing` as `EOF`
---    - no `Chunk`-ed input, so it can't wait to input coming
+--    - `Nothing` as waiting state
+--    - no `Chunk` or `EOF`
 --    - no leave stream (`Yield` only leaves result `a`)
 --  - things beyond scope:
 --    - it doesn't accomodate IO monad
@@ -95,11 +95,17 @@ list2Enumerator ls = \it ->
 --    for example, `listFunction2Iteratee head` tries to consume every input at once
 --    and that makes it impossible to compose iteratees like `ex0`.
 iHead :: Iteratee a a
-iHead = Continue $ \(Just s) -> Yield s
+iHead = Continue $ \myb ->
+  case myb of
+    Nothing -> iHead
+    Just s -> Yield s
 
 iTake :: Int -> Iteratee a [a]
 iTake 0 = Yield []
-iTake n = Continue $ \(Just s) -> (s:) `fmap` iTake (n - 1)
+iTake n = Continue $ \myb ->
+  case myb of
+    Nothing -> iTake n
+    Just s -> (s:) `fmap` iTake (n - 1)
 
 iSum_of_0th_and_5th :: Iteratee Int Int
 iSum_of_0th_and_5th = do
@@ -131,8 +137,6 @@ prop_listFunction2Iteratee_and_list2Enumerator :: Fun String Int -> String -> Pr
 prop_listFunction2Iteratee_and_list2Enumerator (Fun _ f) ls =
   run (list2Enumerator ls $ listFunction2Iteratee f) === f ls
 
--- NOTE: this is impossible to work since first `iHead` cannot wait second input
---       because of current simple `Iteratee` implementation
 prop_eCompose :: [Int] -> [Int] -> Property
 prop_eCompose l l' =
   let twoHeads :: Iteratee Int Int
@@ -154,6 +158,6 @@ spec = do
   Hs.describe "listFunction2Iteratee, list2Enumerator" $ do
     HsQ.prop "." prop_listFunction2Iteratee_and_list2Enumerator
   Hs.describe "eCompose" $ do
-    HsQ.prop "TODO" (const True prop_eCompose)
+    HsQ.prop "." prop_eCompose
   Hs.describe "eFilter" $ HsQ.modifyMaxSuccess (const 1) $ do
     HsQ.prop "." prop_eFilter
