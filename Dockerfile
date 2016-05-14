@@ -6,6 +6,8 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y libblas-dev libatlas-dev liblapack-dev
 
 RUN cabal update
+RUN cabal install hlint
+
 COPY . /app
 
 # create .cabal-sandbox on runtime
@@ -13,4 +15,5 @@ CMD cabal sandbox init && \
     cabal install --only-dependencies -j4 && \
     cabal configure --enable-tests && \
     cabal build && \
-    cabal test --show-details=always
+    cabal test --show-details=always && \
+    /bin/bash -c "cabal exec hlint -- $(cat .hlint)"
