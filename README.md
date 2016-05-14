@@ -12,7 +12,7 @@ The Glorious Glasgow Haskell Compilation System, version 7.10.2
 
 # as binary
 $ cabal build
-$ ./dist/build/main/main 10065 < ./resources/UVA10065.input
+$ cabal exec main -- 10065 < ./resources/UVA10065.input
 
 # as script
 $ runHaskell src/Uva/P10065.hs < ./resources/UVA10065.input
