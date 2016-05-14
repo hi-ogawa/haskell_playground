@@ -7,8 +7,5 @@ cache:
   directories:
     - .cabal-sandbox.docker
 
-before_script:
-  - docker build -t hiogawa/haskell_playground_test .
-
 script:
-  - docker run --rm -v $PWD/.cabal-sandbox.docker:/app/.cabal-sandbox hiogawa/haskell_playground_test
+  - ./jenkins.sh
