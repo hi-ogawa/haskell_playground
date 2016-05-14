@@ -14,6 +14,7 @@ import qualified Uva.P10003 as P10003
 import qualified Uva.P116 as P116
 import qualified IterateeWaitable as IterateeWaitable
 import qualified IterateeNonWaitable as IterateeNonWaitable
+import qualified Puzzles.Hooks2 as Hooks2
 
 main :: IO ()
 main = hspec $ do
@@ -31,3 +32,4 @@ main = hspec $ do
   describe "P116"   $ P116.spec
   describe "IterateeWaitable" $ IterateeWaitable.spec
   describe "IterateeNonWaitable" $ IterateeNonWaitable.spec
+  describe "Hooks2" $ Hooks2.spec
