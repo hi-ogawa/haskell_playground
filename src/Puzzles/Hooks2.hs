@@ -85,7 +85,7 @@ validBoards :: [Board]
 validBoards =
   let validCandidates =
         ($ reverse [1..9]) $ flip foldl [start] $ \candidates hkSize ->
-          (debug (\xx -> length xx)) . filter (not.invalid) . concatMap (nexts hkSize) $ candidates in
+          debug length . filter (not.invalid) . concatMap (nexts hkSize) $ candidates in
   map cBoard validCandidates
   where
     start :: Candidate
@@ -96,9 +96,9 @@ nexts hkSize (Candidate board hkShps)
   | hkSize == 1 = [Candidate (board A.// [(leftTopOfFreeArea hkShps, 1)]) (hkShps ++ [A])]
   | otherwise   =
     (`concatMap` [A, B, C, D]) $ \hkShp ->
-      let npss = (hookArea hkSize hkShps hkShp) `comb` hkSize in
-      (`map` npss) $ \nps ->
-        Candidate (board A.// (map (,hkSize) nps)) (hkShps ++ [hkShp])
+      let numberPositions = hookArea hkSize hkShps hkShp `comb` hkSize in
+      (`map` numberPositions) $ \numberPosition ->
+        Candidate (board A.// map (,hkSize) numberPosition) (hkShps ++ [hkShp])
 
 hookArea :: Int -> [HkShp] -> HkShp -> [(Int, Int)]
 hookArea hkSize hkShps hkShp =
@@ -132,7 +132,7 @@ leftTopOfFreeArea = foldl move (0, 0)
 comb :: [a] -> Int -> [[a]]
 comb ~xs@(h:l) n | n == 0         = [[]]
                  | n >= length xs = [xs]
-                 | otherwise      = (map (h:) (comb l (n-1))) ++ comb l n
+                 | otherwise      = map (h:) (comb l (n-1)) ++ comb l n
 
 invalid :: Candidate -> Bool
 invalid c@(Candidate b _) = invalid0 c || invalid1 b
@@ -140,7 +140,7 @@ invalid c@(Candidate b _) = invalid0 c || invalid1 b
 -- prune (a) (assume `length hkShps >= 1`)
 invalid0 :: Candidate -> Bool
 invalid0 (Candidate board hkShps) =
-  let (hkShps', (hkShp:[])) = splitAt (length hkShps - 1) hkShps
+  let (hkShps', [hkShp]) = splitAt (length hkShps - 1) hkShps
       (i, j) = leftTopOfFreeArea hkShps'
       s = 9 - length hkShps'
       (i', j') = case hkShp of
@@ -163,9 +163,9 @@ invalid1 board = or $
 
 largestProduct :: Board -> Int
 largestProduct board =
-  let subsets = map (\s -> zip [0..8] s) $ permutations [0..8] in
-  ($ subsets) $ (
-    map $ \subset -> product $ map (board A.!) subset
+  let subsets = map (zip [0..8]) $ permutations [0..8] in
+  ($ subsets) $
+    map (product . map (board A.!)
     ) >>>
     maximum
 
