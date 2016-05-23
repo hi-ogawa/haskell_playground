@@ -3,6 +3,7 @@ module Uva.P10152 where
 
 -- greedy
 
+import Control.Arrow ((&&&))
 import Control.Monad
 import Control.Monad.ST
 import Data.List (elemIndex)
@@ -35,13 +36,21 @@ solveST' a = do
   result <- newSTRef []
   forM_ (reverse [0..(n-1)]) $ \e -> do
     i <- v_elemIndex a e
-    ($ [(i+1)..e]) $
-      mapM (\i' -> (i',) <$> V.read a i') >=>
-      return . sortWith (Down . snd) >=>
-      mapM_ (\(i', e') -> do
-        move a i'
-        modifySTRef result (e':)
-      )
+    when ([(i+1)..e] /= []) $ do
+      (mn, mx) <- ($ [(i+1)..e]) $
+        mapM (V.read a) >=>
+        return . (minimum &&& maximum)
+      ($ [0..e]) $
+        filterM (\i' -> do
+          x <- V.read a i'
+          return $ mn <= x && x <= mx
+        ) >=>
+        mapM (\i' -> (i',) <$> V.read a i') >=>
+        return . sortWith (Down . snd) >=>
+        mapM_ (\(i', e') -> do
+          move a i'
+          modifySTRef result (e':)
+        )
   reverse <$> readSTRef result
   where
     move :: A s -> Int -> ST s ()
