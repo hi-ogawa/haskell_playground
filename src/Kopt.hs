@@ -76,16 +76,16 @@ tripleEdgesIdcs (i, j, k, p) =
 triplePathIdcs :: Int -> (Int, Int, Int, Pattern) -> [Int]
 triplePathIdcs n (i, j, k, p) =
   case p of
-    A -> [0..i-1] ++ [i, j] ++ (reverse [i+1..j-1]) ++ (reverse [j+1..k]) ++ [k+1..n-1]
-    B -> [0..i-1] ++ [i] ++ [j+1..k] ++ [i+1..j]                          ++ [k+1..n-1]
-    C -> [0..i-1] ++ [i] ++ [j+1..k] ++ (reverse [i+1..j])                ++ [k+1..n-1]
-    D -> [0..i-1] ++ [i] ++ (reverse [j+1..k]) ++ [i+1..j]                ++ [k+1..n-1]
+    A -> [0..i-1] ++ [i, j] ++ reverse [i+1..j-1] ++ reverse [j+1..k] ++ [k+1..n-1]
+    B -> [0..i-1] ++ [i] ++ [j+1..k] ++ [i+1..j]                      ++ [k+1..n-1]
+    C -> [0..i-1] ++ [i] ++ [j+1..k] ++ reverse [i+1..j]              ++ [k+1..n-1]
+    D -> [0..i-1] ++ [i] ++ reverse [j+1..k] ++ [i+1..j]              ++ [k+1..n-1]
 
 doubleEdgesIdcs :: (Int, Int) -> [(Int, Int)]
 doubleEdgesIdcs (i, j) = [(i, j), (i+1, j+1)]
 
 doublePathIdcs :: Int -> (Int, Int) -> [Int]
-doublePathIdcs n (i, j) = [0..i] ++ (reverse [i+1..j]) ++ [j+1..n-1]
+doublePathIdcs n (i, j) = [0..i] ++ reverse [i+1..j] ++ [j+1..n-1]
 
 
 -------------
@@ -97,8 +97,8 @@ mkAdjMatrix pts =
   V.fromList [ V.fromList [ distance p p' | p' <- pts] | p <- pts ]
 
 spec :: Spec
-spec = do
-  describe "threeOpt" $ do
+spec =
+  describe "threeOpt" $
     it "." $ do
       let pts = [ (0, 0)
                 , (1, 4)
