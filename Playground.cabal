@@ -8,7 +8,7 @@ cabal-version:       >=1.10
 
 executable main
   main-is:             Main.hs
-  ghc-options:         -Wall -fno-warn-unused-do-bind
+  ghc-options:         -Wall -fno-warn-unused-do-bind -fno-warn-type-defaults
   build-depends:       HUnit >= 1.2.5.2
                      , base-prelude
                      , QuickCheck >= 2.8.1
@@ -32,7 +32,7 @@ executable main
 -- to be required in `test-suite spec`
 library
   exposed-modules:     Uva.P10065, Uva.P10054
-  ghc-options:         -Wall -fno-warn-unused-do-bind
+  ghc-options:         -Wall -fno-warn-unused-do-bind -fno-warn-type-defaults
   build-depends:       HUnit >= 1.2.5.2
                      , QuickCheck >= 2.8.1
                      , base-prelude
@@ -58,7 +58,7 @@ library
 test-suite spec
   type:                 exitcode-stdio-1.0
   main-is:              SpecMain.hs
-  ghc-options:          -threaded -Wall -fno-warn-unused-do-bind
+  ghc-options:          -threaded -Wall -fno-warn-unused-do-bind -fno-warn-type-defaults
   build-depends:       HUnit >= 1.2.5.2
                      , QuickCheck >= 2.8.1
                      , base-prelude
