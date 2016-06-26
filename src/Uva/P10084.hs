@@ -1,3 +1,4 @@
+{-# LANGUAGE TupleSections #-}
 module Uva.P10084 (spec) where
 
 import Data.List (inits, sortBy)
@@ -27,12 +28,12 @@ calculateHalfPlain (x, y) (x', y') call =
     Hotter -> (( a,  b), (c, d))
     Colder -> ((-a, -b), (c, d))
 
--- O(n^3)
+-- O(n^3) where n = lengh hps
 halfPlanes2Polygon :: [HalfPlane] -> [Point]
 halfPlanes2Polygon hps =
   let hps' = defaultHalfPlanes ++ hps
-      pts = crossings hps'
-      pts' = filter (\pt -> all (include pt) hps') pts in
+      pts = crossings hps'                                -- O(n^2)
+      pts' = filter (\pt -> all (include pt) hps') pts in -- O(n^3)
   pts'
   where
     defaultHalfPlanes :: [HalfPlane]
@@ -43,17 +44,14 @@ halfPlanes2Polygon hps =
       , ((0, -1), (10, 10))
       ]
 
--- TODO: is it crucial to deal with "more than 2 lines cross at the same point" ?
--- TODO: find algorithm for better time complexity
+-- O(n^2)
 crossings :: [HalfPlane] -> [Point]
 crossings hps = mapMaybe (uncurry crossing) $ pairs hps
 
--- list comprehension specification: https://www.haskell.org/onlinereport/exps.html#sect3.11
 -- un-ordered pair
 pairs :: [a] -> [(a, a)]
-pairs ls =
-  let n = length ls in
-  [ (ls !! i, ls !! j) | i <- [0..(n-1)], j <- [(i+1)..(n-1)]]
+pairs [] = []
+pairs (h:tl) = map (h,) tl ++ pairs tl
 
 crossing :: HalfPlane -> HalfPlane -> Maybe Point
 crossing ((a, b), (c, d)) ((a', b'), (c', d')) =
@@ -64,7 +62,6 @@ crossing ((a, b), (c, d)) ((a', b'), (c', d')) =
   then Nothing
   else Just ((b * k' - b' * k) / divisor, (a' * k - a * k') / divisor)
 
--- TODO: what exactly `>= :: Float -> Float -> Float` does?
 include :: Point -> HalfPlane -> Bool
 include (x, y) ((a, b), (c, d)) = a * x + b * y - (a * c + b * d) >= 0
 
