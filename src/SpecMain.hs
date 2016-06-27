@@ -20,6 +20,7 @@ import qualified Uva.P10026 as P10026
 import qualified Uva.P10152 as P10152
 import Kopt
 import qualified Uva.P10084 as P10084
+import FloatingPointNumber
 
 main :: IO ()
 main = hspec $ do
@@ -43,3 +44,4 @@ main = hspec $ do
   describe "P10152" $ P10152.spec
   describe "Kopt" $ Kopt.spec
   describe "P10084" $ P10084.spec
+  describe "FloatingPointNumber" $ FloatingPointNumber.spec
