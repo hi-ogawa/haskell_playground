@@ -22,6 +22,7 @@ import Kopt
 import qualified Uva.P10084 as P10084
 import FloatingPointNumber
 import StringConversions
+import qualified Extentions.TemplateHaskell as ETH
 
 main :: IO ()
 main = hspec $ do
@@ -47,3 +48,4 @@ main = hspec $ do
   describe "P10084" $ P10084.spec
   describe "FloatingPointNumber" $ FloatingPointNumber.spec
   describe "StringConversions" $ StringConversions.spec
+  describe "TemplateHaskell" $ ETH.basicSpec
