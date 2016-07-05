@@ -7,12 +7,10 @@ module Extentions.TemplateHaskell (basicSpec) where
 --   > :set -ddump-splices
 --   > :load Extentions.TemplateHaskell
 
--- TODO:
--- - n tree type declaration and n tree some operation
-
 import Language.Haskell.TH
 import qualified Extentions.TemplateHaskellAvoidStageRestriction as ASR
 import Test.Hspec
+import Extentions.TemplateHaskellTupleGetter (tupleGetter)
 
 basicSpec :: Spec
 basicSpec = do
@@ -46,3 +44,7 @@ basicSpec = do
       let _foo = LitE (StringL "foo") :: Exp
       -- $(return _foo) == "foo" -- not allowed because of GHC stage restriction
       $(return ASR.foo) == "foo"
+
+  describe "\ntupleGetter" $ do
+    it "$(tupleGetter 7 4) (0, 1, 2, 3, 4, 5, 6) == 4" $ do
+      $(tupleGetter 7 4) (0, 1, 2, 3, 4, 5, 6) == 4
