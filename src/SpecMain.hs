@@ -23,6 +23,7 @@ import qualified Uva.P10084 as P10084
 import FloatingPointNumber
 import StringConversions
 import qualified Extentions.TemplateHaskell as ETH
+import qualified Extentions.QuasiQuotes as EQQ
 
 main :: IO ()
 main = hspec $ do
@@ -49,3 +50,4 @@ main = hspec $ do
   describe "FloatingPointNumber" $ FloatingPointNumber.spec
   describe "StringConversions" $ StringConversions.spec
   describe "TemplateHaskell" $ ETH.basicSpec
+  describe "QuasiQuotes" $ EQQ.spec
