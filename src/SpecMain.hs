@@ -21,6 +21,7 @@ import qualified Uva.P10152 as P10152
 import Kopt
 import qualified Uva.P10084 as P10084
 import FloatingPointNumber
+import StringConversions
 
 main :: IO ()
 main = hspec $ do
@@ -45,3 +46,4 @@ main = hspec $ do
   describe "Kopt" $ Kopt.spec
   describe "P10084" $ P10084.spec
   describe "FloatingPointNumber" $ FloatingPointNumber.spec
+  describe "StringConversions" $ StringConversions.spec
