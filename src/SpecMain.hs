@@ -24,6 +24,7 @@ import FloatingPointNumber
 import StringConversions
 import qualified Extentions.TemplateHaskell as ETH
 import qualified Extentions.QuasiQuotes as EQQ
+import qualified DecodeJsonOnCompile.Usage
 
 main :: IO ()
 main = hspec $ do
@@ -51,3 +52,4 @@ main = hspec $ do
   describe "StringConversions" $ StringConversions.spec
   describe "TemplateHaskell" $ ETH.basicSpec
   describe "QuasiQuotes" $ EQQ.spec
+  describe "DecodeJsonOnCompile.Usage" $ DecodeJsonOnCompile.Usage.spec
