@@ -25,6 +25,7 @@ import StringConversions
 import qualified Extentions.TemplateHaskell as ETH
 import qualified Extentions.QuasiQuotes as EQQ
 import qualified DecodeJsonOnCompile.Usage
+import qualified BentleyOttmann
 
 main :: IO ()
 main = hspec $ do
@@ -53,3 +54,4 @@ main = hspec $ do
   describe "TemplateHaskell" $ ETH.basicSpec
   describe "QuasiQuotes" $ EQQ.spec
   describe "DecodeJsonOnCompile.Usage" $ DecodeJsonOnCompile.Usage.spec
+  describe "BentleyOttmann" $ BentleyOttmann.spec
