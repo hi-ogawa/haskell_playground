@@ -34,7 +34,7 @@ type XColl = [XElem] -- ideally heap
 type YColl = [Line]  -- ideally binary tree
 
 xInsert :: XElem -> XColl -> XColl
-xInsert h tl = sortWith xelem2x $ (h:tl)
+xInsert h tl = sortWith xelem2x (h:tl)
 
 xDelete :: XElem -> XColl -> XColl
 xDelete = delete
@@ -86,7 +86,7 @@ ySwap _ l0 l1 ycoll =
                                   then ([(ycoll !! (i0 - 1), l1)], [(ycoll !! (i0 - 1), l0)])
                                   else ([], [])
     (neighbors1, nonNeighbors1) = if i1 /= length ycoll - 1
-                                  then ([(l0, (ycoll !! (i1 + 1)))], [(l1, (ycoll !! (i1 + 1)))])
+                                  then ([(l0, ycoll !! (i1 + 1))], [(l1, ycoll !! (i1 + 1))])
                                   else ([], [])
     ycoll' = map (ycoll !!) $ [0..(i0 - 1)] ++ [i1, i0] ++ [(i1 + 1)..(length ycoll - 1)]
   in
@@ -169,7 +169,7 @@ updateXColl x newNeighbors newNonNeighbors xcoll =
 -- assume l0 is above l1 on x
 updateNewNeighbor :: X -> Line -> Line -> XColl -> XColl
 updateNewNeighbor x l0 l1 xcoll =
-  case intersect l0 l1 of
+  case l0 `intersect` l1 of
     Nothing -> xcoll
     Just p@(x', _) | x < x' -> xInsert (Intersect p l0 l1) xcoll
                    | otherwise -> xcoll
@@ -177,7 +177,7 @@ updateNewNeighbor x l0 l1 xcoll =
 -- assume l0 is above l1 on x
 updateNewNonNeighbor :: X -> Line -> Line -> XColl -> XColl
 updateNewNonNeighbor x l0 l1 xcoll =
-  case intersect l0 l1 of
+  case l0 `intersect` l1 of
     Nothing -> xcoll
     Just p@(x', _) | x < x' -> xDelete (Intersect p l0 l1) xcoll
                    | otherwise  -> xcoll
