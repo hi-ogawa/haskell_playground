@@ -1,12 +1,12 @@
 module BentleyOttmann (spec) where
 
-import Prelude hiding (lines)
-import Data.List (delete, elemIndex)
-import Data.Maybe (fromJust)
-import GHC.Exts (sortWith)
-import Data.Function (fix)
+import           Data.Function (fix)
+import           Data.List     (delete, elemIndex)
+import           Data.Maybe    (fromJust)
+import           GHC.Exts      (sortWith)
+import           Prelude       hiding (lines)
 
-import Test.Hspec
+import           Test.Hspec
 
 type X = Double
 type Y = Double
