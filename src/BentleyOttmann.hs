@@ -8,6 +8,8 @@ import           Prelude       hiding (lines)
 
 import           Test.Hspec
 
+import qualified BinTree as BT
+
 type X = Double
 type Y = Double
 type Point = (X, Y)
@@ -24,27 +26,28 @@ xelem2x (LeftEnd (x, _) _) = x
 xelem2x (RightEnd (x, _) _) = x
 xelem2x (Intersect (x, _) _ _) = x
 
+instance Ord XElem where
+  el0 < el1 = xelem2x el0 < xelem2x el1
+  el0 <= el1 = el0 < el1 || el0 == el1
+
 
 ---------------------------------------------
 -- interfaces for X-structure, Y-structure --
 
--- TODO: use ideal data structure
-
-type XColl = [XElem] -- ideally heap
+type XColl = BT.BinTree XElem
 type YColl = [Line]  -- ideally binary tree
 
 xInsert :: XElem -> XColl -> XColl
-xInsert h tl = sortWith xelem2x (h:tl)
-
-xDelete :: XElem -> XColl -> XColl
-xDelete = delete
+xInsert = BT.insert
 
 xDropMin :: XColl -> Maybe (XElem, XColl)
-xDropMin [] = Nothing
-xDropMin (h:tl) = Just (h, tl)
+xDropMin = BT.viewMin
+
+xDelete :: XElem -> XColl -> XColl
+xDelete e c = BT.delete e c
 
 xInitialize :: [Line] -> XColl
-xInitialize = sortWith xelem2x . map (\l@(p, _) -> LeftEnd p l)
+xInitialize = BT.fromList . map (\l@(p, _) -> LeftEnd p l)
 
 -- detect neighbor changes along with each YColl operation
 yInsert :: X -> Line -> YColl -> (YColl, [(Line, Line)], [(Line, Line)])
