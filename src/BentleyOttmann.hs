@@ -6,7 +6,8 @@ import           Prelude       hiding (lines)
 
 import           Test.Hspec
 
-import qualified BinTree as BT
+import qualified BinTree       as BT
+
 
 type X = Double
 type Y = Double
@@ -42,7 +43,7 @@ xDropMin :: XColl -> Maybe (XElem, XColl)
 xDropMin = BT.viewMin
 
 xDelete :: XElem -> XColl -> XColl
-xDelete e c = BT.delete e c
+xDelete = BT.delete
 
 xInitialize :: [Line] -> XColl
 xInitialize = BT.fromList . map (\l@(p, _) -> LeftEnd p l)

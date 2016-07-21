@@ -112,8 +112,8 @@ spec = do
       insert 4 t `shouldBe` N 3 (N 2 L L)
                                 (N 5 (N 4 L L)
                                      (N 6 L L))
-      delete 5 t `shouldBe` (N 3 (N 2 L L)
-                                 (N 6 L L))
+      delete 5 t `shouldBe` N 3 (N 2 L L)
+                                (N 6 L L)
   describe "neighborsWith" $
     it "." $ do
       let t = fromList [3, 5, 2, 6, 4 :: Int]
