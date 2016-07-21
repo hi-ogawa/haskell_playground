@@ -90,6 +90,15 @@ rightMost L = Nothing
 rightMost (N x _ L) = Just x
 rightMost (N _ _ t) = rightMost t
 
+-- assume x y exists in tree and f x == f y
+swapWith :: (Eq a, Ord b) => (a -> b) -> a -> a -> BinTree a -> BinTree a
+swapWith _ _ _ L = L
+swapWith f x y (N z t0 t1) | x == z = N y (swapWith f x y t0) (swapWith f x y t1)
+                            | y == z = N x (swapWith f x y t0) (swapWith f x y t1)
+                            | f x < f z = N z (swapWith f x y t0) t1
+                            | f z < f x = N z t0 (swapWith f x y t1)
+                            | otherwise = undefined
+
 
 -- testing --
 
@@ -117,3 +126,12 @@ spec = do
       neighborsWith id 5 t `shouldBe` (Just 4, Just 6)
       neighborsWith id 6 t `shouldBe` (Just 5, Nothing)
       neighborsWith id 8 t `shouldBe` (Nothing, Nothing)
+  describe "swapWith" $
+    it "." $ do
+      let t = fromList [3, 5, 2, 6, 4 :: Int]
+      t `shouldBe` N 3 (N 2 L L)
+                       (N 5 (N 4 L L)
+                            (N 6 L L))
+      swapWith id 5 4 t `shouldBe` N 3 (N 2 L L)
+                                       (N 4 (N 5 L L)
+                                            (N 6 L L))
