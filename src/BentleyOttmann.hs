@@ -1,9 +1,7 @@
 module BentleyOttmann (spec) where
 
 import           Data.Function (fix)
-import           Data.List     (delete, elemIndex)
 import           Data.Maybe    (fromJust)
-import           GHC.Exts      (sortWith)
 import           Prelude       hiding (lines)
 
 import           Test.Hspec
@@ -35,7 +33,7 @@ instance Ord XElem where
 -- interfaces for X-structure, Y-structure --
 
 type XColl = BT.BinTree XElem
-type YColl = [Line]  -- ideally binary tree
+type YColl = BT.BinTree Line
 
 xInsert :: XElem -> XColl -> XColl
 xInsert = BT.insert
@@ -49,55 +47,53 @@ xDelete e c = BT.delete e c
 xInitialize :: [Line] -> XColl
 xInitialize = BT.fromList . map (\l@(p, _) -> LeftEnd p l)
 
+yOrder :: X -> Line -> Double
+yOrder x l = snd . fromJust $ intersectX x l
+
 -- detect neighbor changes along with each YColl operation
 yInsert :: X -> Line -> YColl -> (YColl, [(Line, Line)], [(Line, Line)])
 yInsert x l ycoll =
   let
-    ycoll' = sortWith (snd . fromJust . intersectX x) (l:ycoll)
-    Just i = elemIndex l ycoll'
-    neighbors0 = if i /= 0 then [(ycoll' !! (i - 1), l)]
-                 else []
-    neighbors1 = if i /= length ycoll' - 1 then [(l, ycoll' !! (i + 1))]
-                 else []
-    nonNeighbors = if i /= 0 && i /= length ycoll' - 1 then [(ycoll' !! (i - 1), ycoll' !! (i + 1))]
-                   else []
+    ycoll' = BT.insertWith (yOrder x) l ycoll
+    (newNeighbors, newNonNeighbors) =
+      case BT.neighborsWith (yOrder x) l ycoll' of
+        (Nothing, Nothing) -> ([],                 [])
+        (Just l0, Nothing) -> ([(l, l0)],          [])
+        (Nothing, Just l1) -> ([(l1, l)],          [])
+        (Just l0, Just l1) -> ([(l, l0), (l1, l)], [(l1, l0)])
   in
-  (ycoll', neighbors0 ++ neighbors1, nonNeighbors)
+  (ycoll', newNeighbors, newNonNeighbors)
 
 -- return `nonNeighbors` for consistent interface even though it's not necessary for Bentley-Ottmann algorithm
 yDelete :: X -> Line -> YColl -> (YColl, [(Line, Line)], [(Line, Line)])
-yDelete _ l ycoll =
+yDelete x l ycoll =
   let
-    Just i = elemIndex l ycoll
-    neighbors = if i /= 0 && i /= length ycoll - 1 then [(ycoll !! (i - 1), ycoll !! (i + 1))]
-                else []
-    nonNeighbors0 = if i /= 0 then [(ycoll !! (i - 1), l)]
-                    else []
-    nonNeighbors1 = if i /= length ycoll - 1 then [(l, ycoll !! (i + 1))]
-                    else []
-    ycoll' = delete l ycoll
+    (newNeighbors, newNonNeighbors) =
+      case BT.neighborsWith (yOrder x) l ycoll of
+        (Nothing, Nothing) -> ([], [])
+        (Just l0, Nothing) -> ([], [(l, l0)])
+        (Nothing, Just l1) -> ([], [(l1, l)])
+        (Just l0, Just l1) -> ([(l1, l0)], [(l1, l), (l, l0)])
+    ycoll' = fromJust $ BT.deleteWith (yOrder x) l ycoll
   in
-  (ycoll', neighbors, nonNeighbors0 ++ nonNeighbors1)
+  (ycoll', newNeighbors, newNonNeighbors)
 
--- assume l0 is above l1 at the left of x
+-- assume `lt` is above `lb` at the left of x
 ySwap :: X -> Line -> Line -> YColl -> (YColl, [(Line, Line)], [(Line, Line)])
-ySwap _ l0 l1 ycoll =
+ySwap x lt lb ycoll =
   let
-    Just i0 = elemIndex l0 ycoll
-    Just i1 = elemIndex l1 ycoll
-    (neighbors0, nonNeighbors0) = if i0 /= 0
-                                  then ([(ycoll !! (i0 - 1), l1)], [(ycoll !! (i0 - 1), l0)])
-                                  else ([], [])
-    (neighbors1, nonNeighbors1) = if i1 /= length ycoll - 1
-                                  then ([(l0, ycoll !! (i1 + 1))], [(l1, ycoll !! (i1 + 1))])
-                                  else ([], [])
-    ycoll' = map (ycoll !!) $ [0..(i0 - 1)] ++ [i1, i0] ++ [(i1 + 1)..(length ycoll - 1)]
+    (newNeighbors, newNonNeighbors) =
+      case (fst $ BT.neighborsWith (yOrder x) lb ycoll, snd $ BT.neighborsWith (yOrder x) lt ycoll) of
+        (Nothing, Nothing) -> ([(lb, lt)]          ,           [(lt, lb)])
+        (Just l0, Nothing) -> ([(lb, lt), (lt, l0)],           [(lt, lb), (lb, l0)])
+        (Nothing, Just l1) -> ([(lb, lt), (l1, lb)],           [(lt, lb), (l1, lt)])
+        (Just l0, Just l1) -> ([(lb, lt), (l1, lb), (lt, l0)], [(lt, lb), (lb, l0), (l1, lt)])
+    ycoll' = BT.swapWith (yOrder x) lt lb ycoll
   in
-  (ycoll', [(l1, l0)] ++ neighbors0 ++ neighbors1
-         , [(l0, l1)] ++ nonNeighbors0 ++ nonNeighbors1)
+  (ycoll', newNeighbors, newNonNeighbors)
 
 yEmpty :: YColl
-yEmpty = []
+yEmpty = BT.fromList []
 
 
 -----------------------
