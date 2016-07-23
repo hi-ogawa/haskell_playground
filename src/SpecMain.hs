@@ -27,6 +27,7 @@ import qualified Extentions.QuasiQuotes as EQQ
 import qualified DecodeJsonOnCompile.Usage
 import qualified BentleyOttmann
 import qualified BinTree
+import qualified Concur
 
 main :: IO ()
 main = hspec $ do
@@ -57,3 +58,4 @@ main = hspec $ do
   describe "DecodeJsonOnCompile.Usage" $ DecodeJsonOnCompile.Usage.spec
   describe "BentleyOttmann" $ BentleyOttmann.spec
   describe "BinTree" $ BinTree.spec
+  describe "Concur" $ Concur.spec
