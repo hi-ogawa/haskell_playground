@@ -99,8 +99,8 @@ colors = A.range colorBnds
 degree :: Graph -> Color -> Int
 degree g c = sum $ map (\c' -> g A.! (c, c')) colors
 
-insertEdge :: (Color, Color) -> Graph -> Graph
-insertEdge (c, c') g =
+_insertEdge :: (Color, Color) -> Graph -> Graph
+_insertEdge (c, c') g =
   A.accum (\dup _ -> dup + 1) g $
     map (, undefined) [(c, c'), (c', c)]
 
@@ -143,9 +143,11 @@ chooseNextColor :: Graph -> Color -> Color
 chooseNextColor g c =
   colors & (
     filter (\c' -> g A.! (c, c') > 0) >>>
-    -- NOTE: you need to count the vertex c' as one component after removing (c, c')
-    --       this approach doesn't look good but it works.
-    filter (\c' -> connected (insertEdge (c', c') (deleteEdge (c, c') g))) >>>
+    filter (\c' ->
+      let g' = deleteEdge (c, c') g in
+      connectedN g' == 0 ||
+      (connectedN g' == 1 && degree g' c' > 0)
+      ) >>>
     head
     )
 
@@ -154,7 +156,7 @@ chooseNextColor g c =
 --------------------
 
 eulerian :: Graph -> Bool
-eulerian g = connected g && (and . map (even . degree g)) colors
+eulerian g = connectedN g <= 1 && (and . map (even . degree g)) colors
 
 type CompM' a =
   StateT (
@@ -163,19 +165,19 @@ type CompM' a =
     Int                  -- number of connected components
     ) IO a
 
--- check if non-zero degree verteces are connected (O(m * n))
-connected :: Graph -> Bool
-connected g = eval cmp
+-- number of connected components (O(m * n))
+connectedN :: Graph -> Int
+connectedN g = eval cmp
   where
     eval :: CompM' a -> a
     eval _cmp = unsafePerformIO $ evalStateT _cmp (undefined, undefined, undefined)
-    cmp :: CompM' Bool
+    cmp :: CompM' Int
     cmp =
       do _1 .= g
          _2 .= nonZeroDegrees
          _3 .= 0
          mapM_ traverseComponent colors
-         use $ _3.to (<= 1)
+         use _3
     nonZeroDegrees :: A.Array Color Bool
     nonZeroDegrees = A.array colorBnds $ map (id &&& (0 ==) . degree g) colors
 
