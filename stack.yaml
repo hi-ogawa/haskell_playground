@@ -1,0 +1,15 @@
+resolver: lts-6.6
+
+packages:
+- '.'
+
+extra-deps:
+- diffarray-0.1.1
+
+flags: {}
+
+extra-package-dbs: []
+
+# testing in container mounts /root/.stack from host for cache
+# available from version 1.0.1
+allow-different-user: true

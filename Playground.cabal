@@ -1,88 +1,91 @@
 name:                Playground
 version:             0.1.0.0
-license-file:        LICENSE
 author:              Hiroshi Ogawa
 maintainer:          hi.ogawa.zz@gmail.com
 build-type:          Simple
 cabal-version:       >=1.10
 
-executable main
+executable playground-main
+  hs-source-dirs:      .
   main-is:             Main.hs
   ghc-options:         -Wall -fno-warn-unused-do-bind -fno-warn-type-defaults
-  build-depends:       HUnit >= 1.2.5.2
-                     , QuickCheck >= 2.8.1
-                     , array >=0.5 && <0.6
-                     , base >= 4 && < 5
-                     , base-prelude
-                     , bytestring >= 0.10.6.0
-                     , containers
-                     , diffarray
-                     , heaps
-                     , hspec >= 2.0.2
-                     , lens
-                     , mtl >=2.2 && <2.3
-                     , parsec
-                     , process >= 1.2.3.0
-                     , random >= 1.1
-                     , template-haskell >= 2.10.0.0
-                     , text >= 1.2.1.3
-                     , vector >= 0.11.0.0
-                     , file-embed >= 0.0.10
-                     , aeson
+  default-language:    Haskell2010
+  build-depends:       base >= 4 && < 5
+                     , Playground
+
+test-suite playground-spec
+  hs-source-dirs:      .
+  main-is:             Spec.hs
+  type:                exitcode-stdio-1.0
+  ghc-options:         -threaded -Wall -fno-warn-unused-do-bind -fno-warn-type-defaults
+  default-language:    Haskell2010
+  build-depends:       base >= 4 && < 5
+                     , hspec
+                     , Playground
+
+library
   hs-source-dirs:      src
+  ghc-options:         -Wall -fno-warn-unused-do-bind -fno-warn-type-defaults
   default-language:    Haskell2010
 
--- to be required in `test-suite spec`
-library
-  exposed-modules:     Uva.P10065, Uva.P10054
-  ghc-options:         -Wall -fno-warn-unused-do-bind -fno-warn-type-defaults
-  build-depends:       HUnit >= 1.2.5.2
-                     , QuickCheck >= 2.8.1
+  exposed-modules:
+                       -- uva problems
+                       Uva.P10043
+                     , Uva.P10054
+                     , Uva.P10065
+                     , Uva.P10249
+                     , Uva.P10032
+                     , Uva.P10131
+                     , Uva.P10154
+                     , Uva.P10181
+                     , Uva.P10041
+                     , Uva.P10051
+                     , Uva.P10003
+                     , Uva.P116
+                     , Uva.P10261
+                     , Uva.P10026
+                     , Uva.P10152
+                     , Uva.P10084
+
+                       -- other algorithm problems
+                     , Puzzles.Hooks2
+                     , Kopt
+                     , BentleyOttmann
+                     , BinTree
+
+                       -- play with extentions
+                     , Extentions.QuasiQuotes
+                     , Extentions.QuasiQuoter
+                     , Extentions.TemplateHaskell
+                     , Extentions.TemplateHaskellAvoidStageRestriction
+                     , Extentions.TemplateHaskellTupleGetter
+                     , DecodeJsonOnCompile.Usage
+                     , DecodeJsonOnCompile.Definitions
+
+                       -- others
+                     , IterateeWaitable
+                     , IterateeNonWaitable
+                     , FloatingPointNumber
+                     , StringConversions
+
+  build-depends:       base >= 4 && < 5
+                     , HUnit
+                     , QuickCheck
                      , aeson
-                     , array >=0.5 && <0.6
-                     , base >= 4 && < 5
+                     , array
                      , base-prelude
-                     , bytestring >= 0.10.6.0
+                     , bytestring
                      , containers
                      , diffarray
                      , heaps
                      , hmatrix
-                     , hspec >= 2.0.2
+                     , hspec
                      , lens
-                     , mtl >=2.2 && <2.3
+                     , mtl
                      , parsec
-                     , process >= 1.2.3.0
-                     , random >= 1.1
-                     , template-haskell >= 2.10.0.0
-                     , text >= 1.2.1.3
-                     , vector >= 0.11.0.0
-                     , file-embed >= 0.0.10
-  hs-source-dirs:      src
-  default-language:    Haskell2010
-
-test-suite spec
-  type:                 exitcode-stdio-1.0
-  main-is:              SpecMain.hs
-  ghc-options:          -threaded -Wall -fno-warn-unused-do-bind -fno-warn-type-defaults
-  build-depends:       HUnit >= 1.2.5.2
-                     , QuickCheck >= 2.8.1
-                     , array >=0.5 && <0.6
-                     , base >= 4 && < 5
-                     , base-prelude
-                     , bytestring >= 0.10.6.0
-                     , containers
-                     , diffarray
-                     , heaps
-                     , hspec >= 2.0.2
-                     , lens
-                     , mtl >=2.2 && <2.3
-                     , parsec
-                     , process >= 1.2.3.0
-                     , random >= 1.1
-                     , template-haskell >= 2.10.0.0
-                     , text >= 1.2.1.3
-                     , vector >= 0.11.0.0
-                     , file-embed >= 0.0.10
-                     , aeson
-  hs-source-dirs:       src
-  default-language:     Haskell2010
+                     , process
+                     , random
+                     , template-haskell
+                     , text
+                     , vector
+                     , file-embed
