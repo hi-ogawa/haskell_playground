@@ -1,0 +1,25 @@
+version: "2"
+
+services:
+  test:
+    image: fpco/stack-build
+    command: stack build --test
+    working_dir: /app
+    volumes:
+      - ./Main.hs:/app/Main.hs
+      - ./Spec.hs:/app/Spec.hs
+      - ./src:/app/src
+      - ./resources:/app/resources
+      - ./Playground.cabal:/app/Playground.cabal
+      - ./stack.yaml:/app/stack.yaml
+      - stack_cache_data:/root/.stack
+      - stack_cache_data:/app/.stack-work
+
+  test_travis:
+    extends: test
+    volumes:
+      - ./.stack_cache_data/.stack:/root/.stack
+      - ./.stack_cache_data/.stack-work:/app/.stack-work
+
+volumes:
+  stack_cache_data:
