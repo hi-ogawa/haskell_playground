@@ -1,7 +1,4 @@
-[![Build Status](https://travis-ci.org/hi-ogawa/haskell_playground.png?branch=master)](https://travis-ci.org/hi-ogawa/haskell_playground) (on travis)
-
-[![Build Status](http://jenkins.hiogawa.net/buildStatus/icon?job=haskell_playground)](http://jenkins.hiogawa.net/job/haskell_playground/) (on my personal jenkins)
-
+[![Build Status](https://travis-ci.org/hi-ogawa/haskell_playground.png?branch=master)](https://travis-ci.org/hi-ogawa/haskell_playground)
 
 Tools:
 
