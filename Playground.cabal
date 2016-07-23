@@ -89,3 +89,4 @@ library
                      , text
                      , vector
                      , file-embed
+                     , stm
