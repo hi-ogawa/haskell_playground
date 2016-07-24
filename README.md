@@ -19,6 +19,8 @@ Testing in Docker:
 $ docker-compose run --rm test
 ```
 
+The base container image `hiogawa/haskell:playground` comes from here: https://hub.docker.com/r/hiogawa/haskell/.
+
 ---
 
 Some notes about my algorithm problem solutions ([programs under `src/Uva`](https://github.com/hi-ogawa/haskell_playground/tree/master/src/Uva))
