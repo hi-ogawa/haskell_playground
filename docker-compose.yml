@@ -2,8 +2,8 @@ version: "2"
 
 services:
   test:
-    image: fpco/stack-build
-    command: stack build --test
+    image: hiogawa/haskell:playground
+    command: bash -c "stack setup && stack build --test"
     working_dir: /app
     volumes:
       - ./Main.hs:/app/Main.hs
